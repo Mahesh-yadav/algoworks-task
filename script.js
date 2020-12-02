@@ -4,6 +4,7 @@ const alcoholCheckbox = document.getElementById('alcohol');
 let isSortByAlcohol = false;
 let beers = [];
 
+// Listen for sort toggle
 alcoholCheckbox.addEventListener('change', () => {
   isSortByAlcohol = !isSortByAlcohol;
   if (isSortByAlcohol) {
@@ -14,8 +15,13 @@ alcoholCheckbox.addEventListener('change', () => {
   }
 });
 
+// Fetch beers from API and render them
 fetchBeers();
 
+/**
+ * Sorts list of bears based on abv value
+ * @param {[]} unSortedBeers
+ */
 function sortBeers(unSortedBeers) {
   return unSortedBeers.sort((a, b) => {
     if (a.abv < b.abv) return -1;
@@ -25,6 +31,9 @@ function sortBeers(unSortedBeers) {
   });
 }
 
+/**
+ * Asynchronously fetches beers data and renders them
+ */
 async function fetchBeers() {
   try {
     const response = await fetch(API_ENDPOINT);
@@ -39,6 +48,9 @@ async function fetchBeers() {
   }
 }
 
+/**
+ * Dynamically renders beers data to DOM
+ */
 function renderBeers(beers = []) {
   const container = document.getElementById('beers-container');
 
