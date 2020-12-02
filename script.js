@@ -1,6 +1,29 @@
-const API_ENDPOINT = 'https://api.punkapi.com/v2/beers';
+const API_ENDPOINT = 'https://api.punkapi.com/v2/beers?per_page=40';
+const alcoholCheckbox = document.getElementById('alcohol');
+
+let isSortByAlcohol = false;
+let beers = [];
+
+alcoholCheckbox.addEventListener('change', () => {
+  isSortByAlcohol = !isSortByAlcohol;
+  if (isSortByAlcohol) {
+    const sortedBears = sortBeers([...beers]);
+    renderBeers(sortedBears);
+  } else {
+    renderBeers(beers);
+  }
+});
 
 fetchBeers();
+
+function sortBeers(unSortedBeers) {
+  return unSortedBeers.sort((a, b) => {
+    if (a.abv < b.abv) return -1;
+    if (a.abv > b.abv) return 1;
+
+    return 0;
+  });
+}
 
 async function fetchBeers() {
   try {
@@ -8,7 +31,8 @@ async function fetchBeers() {
 
     const data = await response.json();
 
-    renderBeers(data);
+    beers = data;
+    renderBeers(beers);
   } catch (error) {
     console.log(error);
     return [];
@@ -35,9 +59,7 @@ function renderBeers(beers = []) {
             <p class="beer-desc">
               ${beer.description}
             </p>
-            <h3 class="beer-volume">Volume: ${beer.volume.value} ${
-      beer.volume.unit
-    }</h3>
+            <h3 class="beer-volume">Alcohol By Volume: ${beer.abv}</h3>
             <div class="ingredients">
               <h3 class="list-heading">Ingredients:</h3>
               <ul>
